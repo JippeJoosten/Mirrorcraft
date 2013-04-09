@@ -7,7 +7,7 @@ public class Strings {
     public static final String FALSE = "false";
     
     /* Block name constants */
-    public static final String MIRROR_NAME = "Mirror";
+    public static final String SOLAR_NAME = "Solar";
 
     /* Item name constants */
 

@@ -3,5 +3,5 @@ package com.laidmonkey.common.lib;
 public class BlockIds {
 
     /* Default block ids */
-    public static int MIRROR_DEFAULT = 3451;
+    public static int SOLAR_DEFAULT = 3451;
 }

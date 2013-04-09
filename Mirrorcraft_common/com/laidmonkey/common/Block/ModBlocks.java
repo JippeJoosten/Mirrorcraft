@@ -12,11 +12,11 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 public class ModBlocks {
 
     /* Mod block instances */
-    public static Block blockMirror;
+    public static Block blockSolar;
 
     public static void init() {
 
-        blockMirror = new BlockMirror(BlockIds.MIRROR_DEFAULT, Material.glass, "MirrorCraft/Mirrorcraft_resources:SteamProducer");
+        blockSolar = new BlockSolar(BlockIds.SOLAR_DEFAULT, Material.glass, "MirrorCraft/Mirrorcraft_resources:SteamProducer");
 
         initBlockRecipes();
         gameRegistry();
@@ -25,11 +25,11 @@ public class ModBlocks {
     }
     private static void gameRegistry()
     {
-        GameRegistry.registerBlock(blockMirror, Strings.MIRROR_NAME);
+        GameRegistry.registerBlock(blockSolar, Strings.SOLAR_NAME);
     }
     private static void languageRegistry()
     {
-        LanguageRegistry.addName(blockMirror, "Mirror");
+        LanguageRegistry.addName(blockSolar, "Solar");
     }
 
     private static void initBlockRecipes() {
