@@ -53,7 +53,9 @@ public class Mirrorcraft {
     @PostInit
     public void postInit(FMLPostInitializationEvent event) {
      // Initialize mod blocks
+        CommonProxy.initMod();
         ModBlocks.init();
+        
         
     }
     

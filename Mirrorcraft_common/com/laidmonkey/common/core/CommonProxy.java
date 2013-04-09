@@ -1,5 +1,8 @@
 package com.laidmonkey.common.core;
 
+import com.laidmonkey.common.Block.TileEntity.TileEntitySolar;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.server.MinecraftServer;
@@ -14,7 +17,8 @@ public class CommonProxy {
         }
     }
 
-    public void initMod() {
+    public static void initMod() {
+        GameRegistry.registerTileEntity(TileEntitySolar.class, "tileEntityCombiner");
 
     }
 

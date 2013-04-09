@@ -16,6 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.laidmonkey.common.Mirrorcraft;
+import com.laidmonkey.common.Block.TileEntity.TileEntitySolar;
 import com.laidmonkey.common.lib.Strings;
 
 import cpw.mods.fml.relauncher.Side;
@@ -32,14 +33,7 @@ public class BlockSolar extends BlockContainer {
         this.setCreativeTab(Mirrorcraft.tabMirrorcraft);
         this.setHardness(5F);
     }
-
-    /**
-     * Updates the blocks bounds based on its current state. Args: world, x, y, z
-     */
-    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
-    {
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.375F, 1.0F);
-    }
+    
 
     /**
      * Returns true if the block is emitting indirect/weak redstone power on the specified side. If isBlockNormalCube
@@ -54,49 +48,27 @@ public class BlockSolar extends BlockContainer {
     /**
      * Ticks the block if it's been scheduled
      */
-    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {}
+    public void updateTick(World par1World, int xAs, int yAs, int zAs, Random par5Random) {}
 
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
      * their own) Args: x, y, z, neighbor blockID
      */
-    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5) {}
+    public void onNeighborBlockChange(World world, int xAs, int yAs, int zAs, int blockChangeId) {
+    }
 
     /**
      * Called whenever the block is added into the world. Args: world, x, y, z
      */
     public void onBlockAdded(World par1World, int par2, int par3, int par4) {}
-    
-    
+
+   
     
     @Override
     public boolean onBlockActivated(World world, int par2, int par3, int par4,
             EntityPlayer entityplayer, int par6, float par7, float par8,
             float par9) {
         
-        
-        int l = world.getBlockMetadata(par2, par3, par4);
-        int i1 = world.getSavedLightValue(EnumSkyBlock.Sky, par2, par3, par4) - world.skylightSubtracted;
-        float f = world.getCelestialAngleRadians(1.0F);
-        
-        if (f < (float)Math.PI)
-        {
-            f += (0.0F - f) * 0.2F;
-            
-        }
-        else
-        {
-            f += (((float)Math.PI * 2F) - f) * 0.2F;
-           
-        }
-        if (l != i1)
-        {
-            world.setBlockMetadataWithNotify(par2, par3, par4, i1, 3);
-        }
-        
-        System.out.println(world.getSavedLightValue(EnumSkyBlock.Sky, par2, par3, par4) + " " + par4);
-        //System.out.println("i1 is hier: " + i1 + " f is hierbij: " + f + " en dan nog par2, par3, par4 " + par2 + ", " + par3 + ", " + par4 + "" + " Light is: " + world.skylightSubtracted);
-
         // Drop through if the player is sneaking
         if (entityplayer.isSneaking())
             return false;
@@ -104,15 +76,44 @@ public class BlockSolar extends BlockContainer {
         world.markBlockForUpdate(par2, par3, par4);
         return true;
         
-        
     }
     
-    /**
-     * Can this block provide power. Only wire currently seems to have this change based on its state.
-     */
-    public boolean canProvidePower()
+    public void func_94444_j_(World par1World, int par2, int par3, int par4)
     {
-        return true;
+        if (!par1World.provider.hasNoSky)
+        {
+            int l = par1World.getBlockMetadata(par2, par3, par4);
+            int i1 = par1World.getSavedLightValue(EnumSkyBlock.Sky, par2, par3, par4) - par1World.skylightSubtracted;
+            float f = par1World.getCelestialAngleRadians(1.0F);
+            
+
+            if (f < (float)Math.PI)
+            {
+                f += (0.0F - f) * 0.2F;
+                
+            }
+            else
+            {
+                f += (((float)Math.PI * 2F) - f) * 0.2F;
+            }
+
+            i1 = Math.round((float)i1 * MathHelper.cos(f));
+
+            if (i1 < 0)
+            {
+                i1 = 0;
+            }
+
+            if (i1 > 15)
+            {
+                i1 = 15;
+            }
+
+            if (l != i1)
+            {
+                par1World.setBlockMetadataWithNotify(par2, par3, par4, i1, 3);
+            }
+        }
     }
 
     @Override
@@ -127,7 +128,6 @@ public class BlockSolar extends BlockContainer {
     public void addCreativeItems(ArrayList itemList) {
         itemList.add(new ItemStack(this));
     }
-    
 
     /**
      * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
@@ -149,13 +149,18 @@ public class BlockSolar extends BlockContainer {
     /**
      * Can this block provide power. Only wire currently seems to have this change based on its state.
      */
+    public boolean canProvidePower()
+    {
+        return true;
+    }
 
     /**
      * Returns a new instance of a block's tile entity class. Called on placing the block.
      */
+    @Override
     public TileEntity createNewTileEntity(World par1World)
     {
-        return new TileEntityDaylightDetector();
+        return new TileEntitySolar();
     }
 
     @Override
