@@ -22,19 +22,20 @@ public class TileEntitySolar extends TileEntity {
         super.writeToNBT(data);
        // data.setTag("SolarBlock", BlockSolar.writeToNBT(new NBTTagCompound()));
        
-        
     }
+    
     
     public void updateEntity()
     {
-        if (this.worldObj != null && !this.worldObj.isRemote && this.worldObj.getTotalWorldTime() % 20L == 0L)
-        {
-            this.blockType = this.getBlockType();
-
-            if (this.blockType != null && this.blockType instanceof BlockSolar)
+            if (this.worldObj != null && !this.worldObj.isRemote && this.worldObj.getTotalWorldTime() % 20L == 0L)
             {
-                ((BlockSolar)this.blockType).func_94444_j_(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+                this.blockType = this.getBlockType();
+    
+                if (this.blockType != null && this.blockType instanceof BlockSolar)
+                {
+                    ((BlockSolar)this.blockType).func_94444_j_(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+                }
             }
-        }
+        
     }
 }

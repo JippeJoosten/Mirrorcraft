@@ -9,11 +9,12 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityDaylightDetector;
+import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
 import com.laidmonkey.common.Mirrorcraft;
 import com.laidmonkey.common.Block.TileEntity.TileEntitySolar;
@@ -23,8 +24,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockSolar extends BlockContainer {
+    private Icon[] iconArray = new Icon[2];
     
     public String locationTexture;
+    
+    public boolean runBreak;
 
     public BlockSolar(int par1, Material par2, String par3) {
         super(par1, par2);
@@ -42,7 +46,12 @@ public class BlockSolar extends BlockContainer {
      */
     public int isProvidingWeakPower(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
+        if(runBreak)
+        {
+            return 0;
+        }
         return par1IBlockAccess.getBlockMetadata(par2, par3, par4);
+        
     }
 
     /**
@@ -69,6 +78,8 @@ public class BlockSolar extends BlockContainer {
             EntityPlayer entityplayer, int par6, float par7, float par8,
             float par9) {
         
+        
+        
         // Drop through if the player is sneaking
         if (entityplayer.isSneaking())
             return false;
@@ -80,6 +91,14 @@ public class BlockSolar extends BlockContainer {
     
     public void func_94444_j_(World par1World, int par2, int par3, int par4)
     {
+        
+        BreakControl(par1World, par2, par3, par4);
+        
+        /*
+         * Return true when something is in the way of the solar to get light from the sun.
+         */
+       
+       
         if (!par1World.provider.hasNoSky)
         {
             int l = par1World.getBlockMetadata(par2, par3, par4);
@@ -112,6 +131,26 @@ public class BlockSolar extends BlockContainer {
             if (l != i1)
             {
                 par1World.setBlockMetadataWithNotify(par2, par3, par4, i1, 3);
+            }
+        }
+        
+            
+        
+        
+    }
+    
+    public void BreakControl(World world, int xAs,int yAs,int zAs)
+    {
+        for(int i = 0; i < (world.provider.getHeight() - yAs); i++)
+        {
+            if (!world.isBlockSolidOnSide(xAs, yAs + i, zAs, ForgeDirection.DOWN))
+            {
+                System.out.println("No solid block above");
+                runBreak = false;
+            } else {
+                System.out.println("a solid block above");
+                runBreak = true;
+                break;
             }
         }
     }
@@ -165,10 +204,25 @@ public class BlockSolar extends BlockContainer {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister par1IconRegister) {
 
-        this.blockIcon = par1IconRegister.registerIcon(locationTexture);
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public Icon getBlockTextureFromSideAndMetadata(int par1, int par2)
+    {
+        return par1 == 1 ? this.iconArray[0] : this.iconArray[1];
+    }
 
+    @SideOnly(Side.CLIENT)
+
+    /**
+     * When this method is called, your block should register all the icons it needs with the given IconRegister. This
+     * is the only chance you get to register icons.
+     */
+    public void registerIcons(IconRegister par1IconRegister)
+    {
+        this.iconArray[0] = par1IconRegister.registerIcon("MirrorCraft/Mirrorcraft_resources:SteamProducerTop");
+        this.iconArray[1] = par1IconRegister.registerIcon("daylightDetector_side");
     }
 
 }
