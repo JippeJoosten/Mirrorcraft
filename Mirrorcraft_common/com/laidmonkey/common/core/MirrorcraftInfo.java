@@ -1,5 +1,6 @@
 package com.laidmonkey.common.core;
 
+
 public class MirrorcraftInfo {
 
     public final String MirrorcraftName;
